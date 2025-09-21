@@ -2,6 +2,18 @@
 <html lang="en">
 
 <head>
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="{{ asset('manifest.json') }}">
+  <meta name="theme-color" content="#ea2a33">
+
+  <!-- iOS Support -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Sales Tracker">
+  <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+
+  <!-- head -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
@@ -9,8 +21,12 @@
     href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
     onload="this.rel='stylesheet'" rel="preload" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <title>Stitch Design</title>
+  <title>Aice Ilyas</title>
   <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon" />
+
+  <!-- Preload Font & Critical CSS -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'">
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
@@ -33,6 +49,15 @@
     <x-navigation></x-navigation>
 
   </div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => console.log('SW registered!'))
+          .catch(error => console.log('SW registration failed:', error));
+      });
+    }
+  </script>
   <!-- Lucid Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>

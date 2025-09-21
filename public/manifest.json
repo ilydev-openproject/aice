@@ -1,0 +1,21 @@
+{
+  "name": "Sales Ice Cream Tracker",
+  "short_name": "Sales Tracker",
+  "description": "Aplikasi pelacakan kunjungan & order untuk sales ice cream",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea2a33",
+  "icons": [
+    {
+      "src": "/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
