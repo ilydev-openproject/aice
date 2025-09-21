@@ -142,7 +142,7 @@
                                         'Kode Toko             : ' .
                                         ($visit->outlet->kode_toko ?? '-') .
                                         "\n" .
-                                        "────────────────────────────────\n" .
+                                        "───────────────────\n" .
                                         'Kunjungan ke         : ' .
                                         $this->getTotalVisitsThisMonth($visit->outlet->id) .
                                         " (bln ini)\n" .
@@ -152,7 +152,7 @@
                                         'Total bln ini            : ' .
                                         $this->getTotalBoxesThisMonth($visit->outlet->id) .
                                         " box\n" .
-                                        "────────────────────────────────\n" .
+                                        "───────────────────\n" .
                                         'Jam Operasional    : ' .
                                         ($visit->outlet->jam_buka ? \Carbon\Carbon::parse($visit->outlet->jam_buka)->format('H.i') : '-') .
                                         '-' .
@@ -161,7 +161,7 @@
                                         'No HP                     : ' .
                                         ($visit->outlet->nomor_wa ?? '-') .
                                         "\n" .
-                                        "────────────────────────────────\n" .
+                                        "───────────────────\n" .
                                         '==============================',
                                 ) }}"
                                     target="_blank"
@@ -375,49 +375,49 @@
                     </div>
 
                     <!-- Daftar Produk -->
-                    <div class="max-h-128 bg-red-300 w-full overflow-y-auto rounded-xl">
-                        @forelse($products as $index => $product)
-                            <div class="mb-2 flex items-center gap-3 rounded-lg bg-white p-3 shadow-sm">
-                                <div
-                                    class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                                    @if ($product['foto'])
-                                        <img src="{{ asset('storage/' . $product['foto']) }}"
-                                            alt="{{ $product['nama_produk'] }}"
-                                            class="h-full w-full rounded-lg object-contain">
-                                    @else
-                                        <x-lucide-image-off class="h-6 w-6 text-gray-400" />
-                                    @endif
-                                </div>
+<div class="max-h-128 w-full overflow-y-auto rounded-xl">
+    @forelse($products as $index => $product)
+        <div class="mb-2 flex items-center gap-3 rounded-lg p-3 shadow-sm transition-all duration-200
+            {{ $product['jumlah_box'] > 0 ? 'bg-purple-300/60 border border-purple-200' : 'bg-white' }}">
+            <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                @if ($product['foto'])
+                    <img src="{{ asset('storage/' . $product['foto']) }}"
+                        alt="{{ $product['nama_produk'] }}"
+                        class="h-full w-full rounded-lg object-contain">
+                @else
+                    <x-lucide-image-off class="h-6 w-6 text-gray-400" />
+                @endif
+            </div>
 
-                                <div class="flex-1">
-                                    <p class="text-[10px] font-medium">{{ $product['nama_produk'] }}</p>
-                                    <p class="text-[10px] font-medium text-gray-500">Rp
-                                        {{ number_format($product['harga_jual'], 0, ',', '.') }}
-                                    </p>
-                                    <p class="text-[10px] font-medium text-gray-500">HPP: Rp
-                                        {{ number_format($product['hpp'], 0, ',', '.') }}/box
-                                    </p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <button type="button" wire:click="decrement({{ $index }})"
-                                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
-                                        -
-                                    </button>
-                                    <input type="number" min="0"
-                                        wire:model="products.{{ $index }}.jumlah_box"
-                                        class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]">
-                                    <button type="button" wire:click="increment({{ $index }})"
-                                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="py-4 text-center text-gray-500">
-                                Tidak ada produk ditemukan.
-                            </div>
-                        @endforelse
-                    </div>
+            <div class="flex-1">
+                <p class="text-[10px] font-medium">{{ $product['nama_produk'] }}</p>
+                <p class="text-[10px] font-medium text-gray-500">Rp
+                    {{ number_format($product['harga_jual'], 0, ',', '.') }}
+                </p>
+                <p class="text-[10px] font-medium text-gray-500">HPP: Rp
+                    {{ number_format($product['hpp'], 0, ',', '.') }}/box
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" wire:click="decrement({{ $index }})"
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
+                    -
+                </button>
+                <input type="number" min="0"
+                    wire:model.debounce.300ms="products.{{ $index }}.jumlah_box"
+                    class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]">
+                <button type="button" wire:click="increment({{ $index }})"
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
+                    +
+                </button>
+            </div>
+        </div>
+    @empty
+        <div class="py-4 text-center text-gray-500">
+            Tidak ada produk ditemukan.
+        </div>
+    @endforelse
+</div>
                 </form>
 
                 <!-- Action Buttons -->
