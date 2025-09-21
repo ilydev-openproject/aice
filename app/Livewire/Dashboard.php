@@ -17,7 +17,7 @@ class Dashboard extends Component
         $thisYear = now()->format('Y');
 
         // Target kunjungan hari ini
-        $target = 200;
+        $target = 40;
 
         // Kunjungan bulan ini (jumlah toko dikunjungi)
         $kunjunganBulanIni = Visit::whereYear('tanggal_kunjungan', $thisYear)
