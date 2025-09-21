@@ -27,9 +27,12 @@
   </style>
 </head>
 
-<body class="bg-[#e7e7e7] max-w-sm mx-auto relative">
-  {{ $slot }}
-  <x-navigation></x-navigation>
+<body>
+  <div class="inner-body bg-[#e7e7e7] max-w-sm mx-auto relative">
+    {{ $slot }}
+    <x-navigation></x-navigation>
+
+  </div>
   <!-- Lucid Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>

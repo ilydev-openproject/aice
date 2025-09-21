@@ -44,7 +44,7 @@
                         @foreach($filters as $key => $label)
                             <button wire:click="$set('filter', '{{ $key }}')" wire:loading.class="opacity-50"
                                 class="relative flex flex-col items-center justify-center pb-[13px] pt-4 transition
-                                                                                                                                                                        {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
+                                                                                                                                                                                    {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
                                 <p class="text-base leading-normal tracking-[0.015em]">{{ $label }}</p>
                                 @if($filter === $key)
                                     <div class="absolute bottom-0 h-1 w-full gradient-bg rounded-t-full"></div>
@@ -269,7 +269,7 @@
 
                 <!-- Action Buttons (Sticky Bottom) -->
                 <div
-                    class="fixed w-full max-w-sm pb-12 bottom-0 bg-white border-t border-gray-100 px-6 py-4 backdrop-blur-sm">
+                    class="sticky w-full max-w-md pb-12 bottom-0 bg-white border-t border-gray-100 px-6 py-4 backdrop-blur-sm">
                     <div class="flex gap-3">
                         <button type="button" wire:click="closeModal"
                             class="flex-1 py-3 px-4 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 font-medium transition">
