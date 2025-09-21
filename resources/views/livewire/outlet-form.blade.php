@@ -32,7 +32,7 @@
         <!-- Daftar Toko -->
         <div class="p-4 space-y-4 pb-24">
             @forelse($outlets as $outlet)
-                <div class="p-4 bg-white rounded-lg shadow-sm flex items-center justify-between group">
+                <div class="relative p-4 bg-white rounded-lg shadow-sm group">
                     <div>
                         <p class="font-bold text-lg">{{ $outlet->nama_toko }}</p>
                         @if($outlet->kode_toko)
@@ -51,13 +51,16 @@
                             <p class="text-xs text-gray-500 mt-1">{{ $outlet->alamat }}</p>
                         @endif
                     </div>
-                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                    <!-- Tombol Edit & Hapus -->
+                    <div
+                        class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <button wire:click="editOutlet({{ $outlet->id }})"
-                            class="p-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200">
+                            class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-blue-600 hover:bg-blue-50 transition">
                             <x-lucide-pencil class="w-4 h-4" />
                         </button>
                         <button wire:click="deleteOutlet({{ $outlet->id }})" wire:confirm="Yakin ingin menghapus toko ini?"
-                            class="p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200">
+                            class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-600 hover:bg-red-50 transition">
                             <x-lucide-trash-2 class="w-4 h-4" />
                         </button>
                     </div>
