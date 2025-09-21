@@ -2,10 +2,11 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
+use Carbon\Carbon;
 use App\Models\Visit;
 use App\Models\Outlet;
-use Carbon\Carbon;
+use Livewire\Component;
+use App\Models\VisitItem;
 
 class Dashboard extends Component
 {
@@ -15,35 +16,40 @@ class Dashboard extends Component
         $thisMonth = now()->format('m');
         $thisYear = now()->format('Y');
 
-        // Target kunjungan bulan ini
+        // Target kunjungan hari ini
         $target = 200;
 
-        // Kunjungan bulan ini
+        // Kunjungan bulan ini (jumlah toko dikunjungi)
         $kunjunganBulanIni = Visit::whereYear('tanggal_kunjungan', $thisYear)
             ->whereMonth('tanggal_kunjungan', $thisMonth)
+            ->whereDate('tanggal_kunjungan', $today)
             ->count();
 
-        // Total penjualan bulan ini
-        $totalPenjualan = Visit::whereYear('tanggal_kunjungan', $thisYear)
-            ->whereMonth('tanggal_kunjungan', $thisMonth)
-            ->sum('total_harga');
+        // Total BOX terjual hari ini (bukan rupiah!)
+        $totalBoxTerjual = VisitItem::whereHas('visit', function ($query) use ($thisYear, $thisMonth, $today) {
+            $query->whereYear('tanggal_kunjungan', $thisYear)
+                ->whereMonth('tanggal_kunjungan', $thisMonth)
+                ->whereDate('tanggal_kunjungan', $today);
+        })->sum('jumlah_box');
 
         // Outlet baru bulan ini
         $outletBaru = Outlet::whereYear('created_at', $thisYear)
             ->whereMonth('created_at', $thisMonth)
             ->count();
 
-        // Aktivitas terakhir (kunjungan)
-        $aktivitasTerakhir = Visit::with('outlet')
+        // Aktivitas terakhir (kunjungan) — tampilkan jumlah box
+        $aktivitasTerakhir = Visit::with(['outlet', 'visitItems'])
             ->orderBy('tanggal_kunjungan', 'desc')
             ->limit(3)
             ->get()
             ->map(function ($visit) {
+                $totalBox = $visit->visitItems()->sum('jumlah_box');
                 return [
                     'type' => 'kunjungan',
                     'title' => 'Kunjungan ke ' . $visit->outlet->nama_toko,
                     'time' => $visit->tanggal_kunjungan->diffForHumans(),
-                    'amount' => $visit->total_harga > 0 ? $visit->total_harga : null,
+                    'amount' => $totalBox > 0 ? $totalBox : null, // <-- Jumlah box, bukan rupiah
+                    'unit' => 'box',
                 ];
             });
 
@@ -59,6 +65,7 @@ class Dashboard extends Component
                     'title' => 'Outlet baru: ' . $outlet->nama_toko,
                     'time' => $outlet->created_at->diffForHumans(),
                     'amount' => null,
+                    'unit' => null,
                 ];
             });
 
@@ -69,7 +76,7 @@ class Dashboard extends Component
         return [
             'target_kunjungan' => $target,
             'kunjungan_bulan_ini' => $kunjunganBulanIni,
-            'total_penjualan' => $totalPenjualan,
+            'total_box_terjual' => $totalBoxTerjual, // <-- Ganti nama
             'outlet_baru' => $outletBaru,
             'aktivitas_terakhir' => $aktivitas,
             'progress' => $target > 0 ? ($kunjunganBulanIni / $target) * 100 : 0,

@@ -21,7 +21,7 @@
             <div class="rounded-xl bg-gradient-to-tr bg-purple-800 to-purple-500 py-4 px-8 shadow-lg">
                 <div class="flex justify-between items-start">
                     <div class="text-content-light">
-                        <p class="text-lg font-bold text-slate-50">Total Kunjungan Bulan Ini</p>
+                        <p class="text-lg font-bold text-slate-50">Total Kunjungan Hari Ini</p>
                         <p class="text-4xl font-bold text-slate-50 mt-2">
                             {{ number_format($stats['kunjungan_bulan_ini'], 0, ',', '.') }}
                         </p>
@@ -41,7 +41,7 @@
 
             <!-- Statistik Ringkas -->
             <div class="grid grid-cols-2 gap-4">
-                <!-- Total Order -->
+                <!-- Total Box -->
                 <div class="relative flex flex-col items-start rounded-xl overflow-hidden text-slate-50 p-4 shadow-md">
                     <!-- Gradient overlay -->
                     <div class="absolute inset-0 bg-gradient-to-tr from-pink-500 to-pink-300"></div>
@@ -50,10 +50,10 @@
                         <p class="font-bold text-base">Total Order</p>
                         <x-lucide-shopping-bag class="w-6 h-6" />
                     </div>
-                    <p class="relative z-10 text-2xl font-bold mt-2">Rp
-                        {{ number_format($stats['total_penjualan'], 0, ',', '.') }}
+                    <p class="relative z-10 text-2xl font-bold mt-2">
+                        {{ number_format($stats['total_box_terjual'], 0, ',', '.') }}
                     </p>
-                    <p class="relative z-10 text-xs text-subtle-light mt-1">Bulan ini</p>
+                    <p class="relative z-10 text-xs text-subtle-light mt-1">Hari ini</p>
                 </div>
 
                 <!-- Outlet Baru -->
@@ -94,8 +94,8 @@
                                 <p class="font-normal text-[8px] text-slate-500">{{ $aktivitas['time'] }}</p>
                             </div>
                             @if($aktivitas['amount'])
-                                <p class="ml-auto font-semibold text-green-600">+ Rp
-                                    {{ number_format($aktivitas['amount'], 0, ',', '.') }}
+                                <p class="ml-auto font-semibold text-green-600">+
+                                    {{ number_format($aktivitas['amount'], 0, ',', '.') }} box
                                 </p>
                             @endif
                         </div>
