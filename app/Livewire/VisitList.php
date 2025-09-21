@@ -75,12 +75,17 @@ class VisitList extends Component
         }
 
         $this->updatedProducts();
+
+        // 🔥 TUTUP MODAL KUNJUNGAN saat buka modal order
+        $this->showModal = false;
+
         $this->showOrderModal = true;
     }
 
     public function closeOrderModal()
     {
         $this->showOrderModal = false;
+        $this->showModal = false; // 👈 Tambahkan ini!
         $this->resetValidation();
     }
 
