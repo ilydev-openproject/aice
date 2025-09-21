@@ -53,8 +53,7 @@
                     </div>
 
                     <!-- Tombol Edit & Hapus -->
-                    <div
-                        class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div class="absolute top-2 right-2 flex gap-1">
                         <button wire:click="editOutlet({{ $outlet->id }})"
                             class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-blue-600 hover:bg-blue-50 transition">
                             <x-lucide-pencil class="w-4 h-4" />
@@ -147,7 +146,7 @@
 
                     <!-- Link Google Maps -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">🗺️ Link Google Maps *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Link Google Maps *</label>
                         <input type="url" wire:model="link"
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="https://goo.gl/maps/...">
