@@ -81,8 +81,8 @@
                 </div>
             @else
                 @foreach ($visits as $visit)
-                    <div
-                        class="relative rounded-xl border border-gray-100 bg-white p-2 shadow-sm transition hover:shadow-md">
+                    <div wire:click="openEditVisit({{ $visit->id }})"
+                        class="relative cursor-pointer rounded-xl border border-gray-100 bg-white p-2 shadow-sm transition hover:shadow-md">
                         <!-- Jam visit -->
                         <div class="absolute bottom-0 left-2 rounded-t-md bg-gray-300 p-1 text-end text-[10px]">
                             <p>{{ $visit->created_at->format('H:i') }}</p>
@@ -195,8 +195,8 @@
                     <button wire:click="closeModal" class="rounded-full p-2 transition hover:bg-gray-100">
                         <x-lucide-arrow-left class="h-6 w-6 text-[#141217]" />
                     </button>
-                    <h2 class="flex-1 text-center text-lg font-bold text-[#141217]">
-                        Input Kunjungan
+                    <h2 class="text-lg font-bold">
+                        {{ $currentVisitId ? 'Edit Kunjungan' : 'Tambah Kunjungan' }}
                     </h2>
                     <div class="w-10"></div>
                 </div>
@@ -217,14 +217,28 @@
                                 open: false,
                                 selectedLabel: 'Pilih Toko',
                                 search: '',
+                                outlets: @js($outlets->toArray()),
                                 filteredOutlets() {
-                                    if (!this.search) return @js($outlets->toArray());
-                                    return @js($outlets->toArray()).filter(outlet =>
+                                    if (!this.search) return this.outlets
+                                    return this.outlets.filter(outlet =>
                                         outlet.nama_toko.toLowerCase().includes(this.search.toLowerCase()) ||
                                         (outlet.kode_toko && outlet.kode_toko.toLowerCase().includes(this.search.toLowerCase()))
-                                    );
+                                    )
+                                },
+                                init() {
+                                    $watch('$wire.outlet_id', value => {
+                                        if (value) {
+                                            let outlet = this.outlets.find(o => o.id == value)
+                                            if (outlet) {
+                                                this.selectedLabel = outlet.nama_toko + (outlet.kode_toko ? ' (' + outlet.kode_toko + ')' : '')
+                                            }
+                                        } else {
+                                            this.selectedLabel = 'Pilih Toko'
+                                        }
+                                    })
                                 }
                             }" class="relative">
+
                                 <!-- Trigger Button -->
                                 <div @click="open = !open"
                                     class="form-select flex h-12 w-full cursor-pointer items-center justify-between rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-900 shadow-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
@@ -352,7 +366,7 @@
 
                 <!-- Header -->
                 <div
-                    class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-">
+                    class="py- sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6">
                     <button wire:click="closeOrderModal" class="rounded-full p-2 transition hover:bg-gray-100">
                         <x-lucide-arrow-left class="h-6 w-6 text-[#141217]" />
                     </button>
@@ -388,7 +402,7 @@
                                     @if ($product['foto'])
                                         <img src="{{ asset('storage/' . $product['foto']) }}"
                                             alt="{{ $product['nama_produk'] }}"
-                                            class="h-full w-full rounded-lg object-contain">
+                                            class="h-full w-full rounded-lg object-contain" loading="lazy">
                                     @else
                                         <x-lucide-image-off class="h-6 w-6 text-gray-400" />
                                     @endif
@@ -426,15 +440,22 @@
                 </form>
 
                 <!-- Action Buttons -->
-                <div
-                    class="fixed bottom-3 w-full max-w-md border-t border-gray-100 bg-white px-6 backdrop-blur-sm">
-                    <!-- Total Harga -->
+                <div class="fixed bottom-3 w-full max-w-md border-t border-gray-100 bg-white px-6 backdrop-blur-sm">
+                    <!-- Total Harga & Jumlah Box -->
                     <div class="rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2">
-                        <div class="flex items-center justify-between">
-                            <span class="text-lg font-bold">Total Order:</span>
-                            <span class="text-xl font-bold text-green-600">
-                                Rp {{ number_format($totalHarga, 0, ',', '.') }}
-                            </span>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[12px] font-bold">Total Box:</span>
+                                <span class="text-[12px] font-bold text-blue-600">
+                                    {{ collect($products)->sum('jumlah_box') }} Box
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[12px] font-bold">Total Harga:</span>
+                                <span class="text-[12px] font-bold text-green-600">
+                                    Rp {{ number_format($totalHarga, 0, ',', '.') }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="flex gap-3">

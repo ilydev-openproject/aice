@@ -140,6 +140,19 @@ class VisitList extends Component
         }
     }
 
+    public function openEditVisit($visitId)
+    {
+        $visit = Visit::findOrFail($visitId);
+
+        // Isi form dengan data lama
+        $this->currentVisitId = $visit->id;
+        $this->outlet_id = $visit->outlet_id;
+        $this->catatan = $visit->catatan;
+        $this->tanggal_kunjungan = Carbon::parse($visit->tanggal_kunjungan)->format('Y-m-d');
+
+        $this->showModal = true; // tampilkan modal edit
+    }
+
     // Simpan Kunjungan
     public function saveVisit()
     {
@@ -150,20 +163,33 @@ class VisitList extends Component
 
         $path = $this->foto_bukti ? $this->foto_bukti->store('visits', 'public') : null;
 
-        // ✅ Simpan waktu saat ini jika hanya tanggal yang dipilih
         $fullDateTime = $this->tanggal_kunjungan . ' ' . now()->format('H:i:s');
 
-        Visit::create([
-            'outlet_id' => $this->outlet_id,
-            'catatan' => $this->catatan,
-            'foto_bukti' => $path,
-            'tanggal_kunjungan' => $fullDateTime, // ✅ Simpan datetime lengkap
-            'total_harga' => 0,
-        ]);
+        if ($this->currentVisitId) {
+            // 🔹 Update
+            $visit = Visit::findOrFail($this->currentVisitId);
+            $visit->update([
+                'outlet_id' => $this->outlet_id,
+                'catatan' => $this->catatan,
+                'foto_bukti' => $path ?? $visit->foto_bukti,
+                'tanggal_kunjungan' => $fullDateTime,
+            ]);
+            session()->flash('success', 'Kunjungan berhasil diperbarui!');
+        } else {
+            // 🔹 Create
+            Visit::create([
+                'outlet_id' => $this->outlet_id,
+                'catatan' => $this->catatan,
+                'foto_bukti' => $path,
+                'tanggal_kunjungan' => $fullDateTime,
+                'total_harga' => 0,
+            ]);
+            session()->flash('success', 'Kunjungan berhasil disimpan!');
+        }
 
-        session()->flash('success', 'Kunjungan berhasil disimpan!');
         $this->closeModal();
     }
+
 
     // Simpan Order
     public function saveOrder()
