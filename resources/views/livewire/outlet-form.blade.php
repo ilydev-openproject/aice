@@ -79,7 +79,7 @@
                 x-transition:enter-start="transform translate-y-full" x-transition:enter-end="transform translate-y-0"
                 x-transition:leave="ease-in duration-200" x-transition:leave-start="transform translate-y-0"
                 x-transition:leave-end="transform translate-y-full"
-                class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl overflow-y-auto max-h-[100vh]">
+                class="relative w-full max-w-md bg-white shadow-2xl overflow-y-auto max-h-[100vh]">
 
                 <!-- Header -->
                 <div
