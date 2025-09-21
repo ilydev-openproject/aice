@@ -45,7 +45,7 @@
                             @foreach($filters as $key => $label)
                                 <button wire:click="$set('filter', '{{ $key }}')" wire:loading.class="opacity-50"
                                     class="relative flex flex-col items-center justify-center pb-[13px] pt-4 transition
-                                                                                                                                                                                                                                                                                                                                                                            {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
+                                                                                                                                                                                                                                                                                                                                                                                    {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
                                     <p class="text-base text-[12px] leading-normal tracking-[0.015em]">{{ $label }}</p>
                                     @if($filter === $key)
                                         <div class="absolute bottom-0 h-1 w-full gradient-bg rounded-t-full"></div>
@@ -75,8 +75,7 @@
                                         @endif
 
                                         <!-- Tombol Edit & Hapus -->
-                                        <div
-                                            class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <div class="absolute top-2 right-2 flex gap-1">
                                             <button wire:click="editProduct({{ $product->id }})"
                                                 class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-blue-600 hover:bg-blue-50 transition">
                                                 <x-lucide-pencil class="w-4 h-4" />
@@ -135,7 +134,7 @@
                     x-transition:enter-end="transform translate-y-0" x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="transform translate-y-0"
                     x-transition:leave-end="transform translate-y-full"
-                    class="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl overflow-y-auto max-h-[100vh] pb-8"
+                    class="relative w-full max-w-md bg-white shadow-2xl overflow-y-auto max-h-[100vh] pb-8"
                     @click.outside="open = false">
 
                     <!-- Header -->
