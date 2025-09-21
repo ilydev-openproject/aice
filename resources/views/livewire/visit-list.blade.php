@@ -3,17 +3,20 @@
         <!-- Header -->
         <div class="flex items-center justify-between p-4 pb-2">
             <img src="{{ asset('logo.png') }}" class="h-12 w-auto" alt="">
-            <div class="flex w-12 items-center justify-end">
+            <div class="flex items-center justify-end">
                 <button wire:click="openModal"
-                    class="flex h-12 w-12 max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#BCA1D4]/30 text-base font-bold leading-normal tracking-[0.015em] text-[#141217] shadow-sm backdrop-blur-sm">
-                    <x-lucide-plus class="h-8 w-8" style="color: var(--brand-purple);" />
+                    class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#BCA1D4]/30 px-2 py-1">
+                    <span class="me-2 text-[12px] text-slate-700">Tambah</span>
+                    <x-lucide-plus
+                        class="h-6 w-6 rounded-full bg-[#BCA1D4]/30 text-base font-bold leading-normal tracking-[0.015em] text-[#141217] shadow-sm backdrop-blur-sm"
+                        style="color: var(--brand-purple);" />
                 </button>
             </div>
         </div>
 
         <!-- Search -->
-        <div class="px-4 py-3">
-            <label class="flex h-14 w-full min-w-40 flex-col">
+        <div class="px-4">
+            <label class="flex h-10 w-full min-w-40 flex-col">
                 <div class="flex h-full w-full flex-1 items-stretch rounded-full bg-white shadow-sm">
                     <div class="flex items-center justify-center pl-5 text-[#756783]">
                         <x-lucide-search class="text-[#756783]" />
@@ -60,7 +63,7 @@
         </div>
 
         <!-- Daftar Kunjungan -->
-        <div class="space-y-4 p-4">
+        <div class="space-y-2 px-4">
             @if ($visits->isEmpty())
                 <div class="rounded-xl bg-gray-50 py-12 text-center">
                     <x-lucide-package class="mx-auto mb-3 h-12 w-12 text-gray-300" />
@@ -79,9 +82,9 @@
             @else
                 @foreach ($visits as $visit)
                     <div
-                        class="relative rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md">
+                        class="relative rounded-xl border border-gray-100 bg-white p-2 shadow-sm transition hover:shadow-md">
                         <!-- Jam visit -->
-                        <div class="absolute bottom-0 left-4 rounded-t-md bg-gray-300 p-1 text-end text-[10px]">
+                        <div class="absolute bottom-0 left-2 rounded-t-md bg-gray-300 p-1 text-end text-[10px]">
                             <p>{{ $visit->created_at->format('H:i') }}</p>
                         </div>
                         <div class="flex items-start justify-between">
@@ -184,7 +187,7 @@
                 x-transition:enter-start="transform translate-y-full" x-transition:enter-end="transform translate-y-0"
                 x-transition:leave="ease-in duration-200" x-transition:leave-start="transform translate-y-0"
                 x-transition:leave-end="transform translate-y-full"
-                class="relative h-[100vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white shadow-2xl">
+                class="relative h-[100vh] w-full max-w-md overflow-y-auto bg-white shadow-2xl">
 
                 <!-- Header -->
                 <div
@@ -252,7 +255,8 @@
                                             <!-- Option Default -->
                                             <li @click="selectedLabel = 'Pilih Toko'; open = false; $wire.set('outlet_id', ''); search = ''"
                                                 class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-slate-900 hover:bg-purple-50">
-                                                <span class="block truncate font-medium text-gray-500">Pilih Toko</span>
+                                                <span class="block truncate font-medium text-gray-500">Pilih
+                                                    Toko</span>
                                             </li>
 
                                             <!-- Daftar Outlet (Filtered) -->
@@ -344,11 +348,11 @@
                 x-transition:enter-start="transform translate-y-full" x-transition:enter-end="transform translate-y-0"
                 x-transition:leave="ease-in duration-200" x-transition:leave-start="transform translate-y-0"
                 x-transition:leave-end="transform translate-y-full"
-                class="relative h-[100vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white shadow-2xl">
+                class="relative h-[100vh] w-full max-w-md overflow-y-auto bg-white shadow-2xl">
 
                 <!-- Header -->
                 <div
-                    class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
+                    class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-">
                     <button wire:click="closeOrderModal" class="rounded-full p-2 transition hover:bg-gray-100">
                         <x-lucide-arrow-left class="h-6 w-6 text-[#141217]" />
                     </button>
@@ -366,68 +370,69 @@
                 @endif
 
                 <!-- Form -->
-                <form wire:submit.prevent="saveOrder" class="mt-6 space-y-6 px-6" id="order-form">
+                <form wire:submit.prevent="saveOrder" class="space-y-2 px-3" id="order-form">
                     <!-- Cari Produk -->
                     <div>
                         <input type="text" wire:model.live="searchProduct"
-                            class="w-full rounded-full border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                            class="w-full rounded-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-purple-500"
                             placeholder="Ketik nama produk...">
                     </div>
 
                     <!-- Daftar Produk -->
-<div class="max-h-128 w-full overflow-y-auto rounded-xl">
-    @forelse($products as $index => $product)
-        <div class="mb-2 flex items-center gap-3 rounded-lg p-3 shadow-sm transition-all duration-200
-            {{ $product['jumlah_box'] > 0 ? 'bg-purple-300/60 border border-purple-200' : 'bg-white' }}">
-            <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                @if ($product['foto'])
-                    <img src="{{ asset('storage/' . $product['foto']) }}"
-                        alt="{{ $product['nama_produk'] }}"
-                        class="h-full w-full rounded-lg object-contain">
-                @else
-                    <x-lucide-image-off class="h-6 w-6 text-gray-400" />
-                @endif
-            </div>
+                    <div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
+                        @forelse($products as $index => $product)
+                            <div
+                                class="{{ $product['jumlah_box'] > 0 ? 'bg-purple-300/60 border border-purple-200' : 'bg-white' }} mb-2 flex items-center gap-3 rounded-lg p-1 shadow-sm transition-all duration-200">
+                                <div
+                                    class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                                    @if ($product['foto'])
+                                        <img src="{{ asset('storage/' . $product['foto']) }}"
+                                            alt="{{ $product['nama_produk'] }}"
+                                            class="h-full w-full rounded-lg object-contain">
+                                    @else
+                                        <x-lucide-image-off class="h-6 w-6 text-gray-400" />
+                                    @endif
+                                </div>
 
-            <div class="flex-1">
-                <p class="text-[10px] font-medium">{{ $product['nama_produk'] }}</p>
-                <p class="text-[10px] font-medium text-gray-500">Rp
-                    {{ number_format($product['harga_jual'], 0, ',', '.') }}
-                </p>
-                <p class="text-[10px] font-medium text-gray-500">HPP: Rp
-                    {{ number_format($product['hpp'], 0, ',', '.') }}/box
-                </p>
-            </div>
-            <div class="flex items-center gap-2">
-                <button type="button" wire:click="decrement({{ $index }})"
-                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
-                    -
-                </button>
-                <input type="number" min="0"
-                    wire:model.debounce.300ms="products.{{ $index }}.jumlah_box"
-                    class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]">
-                <button type="button" wire:click="increment({{ $index }})"
-                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
-                    +
-                </button>
-            </div>
-        </div>
-    @empty
-        <div class="py-4 text-center text-gray-500">
-            Tidak ada produk ditemukan.
-        </div>
-    @endforelse
-</div>
+                                <div class="flex-1">
+                                    <p class="text-[10px] font-medium">{{ $product['nama_produk'] }}</p>
+                                    <p class="text-[10px] font-medium text-gray-500">Rp
+                                        {{ number_format($product['harga_jual'], 0, ',', '.') }}
+                                    </p>
+                                    <p class="text-[10px] font-medium text-gray-500">HPP: Rp
+                                        {{ number_format($product['hpp'], 0, ',', '.') }}/box
+                                    </p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" wire:click="decrement({{ $index }})"
+                                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
+                                        -
+                                    </button>
+                                    <input type="number" min="0"
+                                        wire:model.debounce.300ms="products.{{ $index }}.jumlah_box"
+                                        class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]">
+                                    <button type="button" wire:click="increment({{ $index }})"
+                                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="py-4 text-center text-gray-500">
+                                Tidak ada produk ditemukan.
+                            </div>
+                        @endforelse
+                    </div>
                 </form>
 
                 <!-- Action Buttons -->
                 <div
-                    class="fixed bottom-8 w-full max-w-md border-t border-gray-100 bg-white px-6 py-4 backdrop-blur-sm">
+                    class="fixed bottom-3 w-full max-w-md border-t border-gray-100 bg-white px-6 backdrop-blur-sm">
                     <!-- Total Harga -->
-                    <div class="rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 p-4">
+                    <div class="rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2">
                         <div class="flex items-center justify-between">
                             <span class="text-lg font-bold">Total Order:</span>
-                            <span class="text-2xl font-bold text-green-600">
+                            <span class="text-xl font-bold text-green-600">
                                 Rp {{ number_format($totalHarga, 0, ',', '.') }}
                             </span>
                         </div>

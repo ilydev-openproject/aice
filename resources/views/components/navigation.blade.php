@@ -1,7 +1,7 @@
 <!-- Bottom Nav -->
 <div class="fixed max-w-sm w-full bottom-0 shadow-[0px_-4px_6px_-1px_rgba(0,0,0,0.1)]  z-50">
     <div class="flex gap-2 bg-slate-100 backdrop-blur-sm px-4 py-2 shadow-t-lg">
-        <a class="flex flex-1 flex-col items-center justify-center rounded-full" href="/">
+        <a class="flex flex-1 flex-col items-center justify-center rounded-full" href="{{ route('home') }}">
             <div class="flex h-8 items-center justify-center"
                 style="color: {{ Request::is('/') ? 'var(--brand-purple)' : '#756783' }};">
                 <x-lucide-home class="w-6 h-6" />
@@ -26,11 +26,13 @@
             <p class="text-xs font-medium leading-normal tracking-wide"
                 style="color: {{ Request::is('visit') ? 'var(--brand-purple)' : '#756783' }};">Visit</p>
         </a>
-        <a class="flex flex-1 flex-col items-center justify-center text-[#756783]" href="#">
-            <div class="text-[#756783] flex h-8 items-center justify-center">
-                <x-lucide-user class="w-6 h-6" />
+        <a class="flex flex-1 flex-col items-center justify-center" href="{{ route('products.catalog') }}">
+            <div class="flex h-8 items-center justify-center"
+                style="color: {{ Request::is('produk') ? 'var(--brand-purple)' : '#756783' }};">
+                <x-lucide-popsicle class="w-6 h-6" />
             </div>
-            <p class="text-[#756783] text-xs font-medium leading-normal tracking-wide">Profile</p>
+            <p class="text-xs font-medium leading-normal tracking-wide"
+                style="color: {{ Request::is('produk') ? 'var(--brand-purple)' : '#756783' }};">Produk</p>
         </a>
     </div>
 </div>

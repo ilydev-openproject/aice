@@ -8,29 +8,29 @@
                     <div class="flex items-center p-4 pb-2 justify-between relative">
                         <img src="{{ asset('logo.png') }}" class="h-12 w-auto" alt="">
 
-                        <div class="flex w-12 items-center justify-end ">
+                        <div class="flex items-center justify-end ">
                             <button wire:click="openModal"
-                                class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 w-12 bg-[#BCA1D4]/30 backdrop-blur-sm text-[#141217] text-base font-bold leading-normal tracking-[0.015em] shadow-sm">
-                                <x-lucide-plus class="w-8 h-8" style="color: var(--brand-purple);" />
+                                class="flex max-w-[480px] bg-[#BCA1D4]/30 py-1 px-2 rounded-full cursor-pointer items-center justify-center overflow-hidden ">
+                                <span class="text-[12px] text-slate-700 me-2">Tambah</span>
+                                <x-lucide-plus
+                                    class="w-6 h-6 rounded-full bg-[#BCA1D4]/30 backdrop-blur-sm text-[#141217] text-base font-bold leading-normal tracking-[0.015em] shadow-sm"
+                                    style="color: var(--brand-purple);" />
                             </button>
                         </div>
                     </div>
                     <!-- Search -->
-                    <div class="px-4 py-2">
-                        <label class="flex flex-col min-w-40 h-8 w-full">
+                    <div class="px-4">
+                        <label class="flex flex-col min-w-40 h-10 w-full">
                             <div class="flex w-full flex-1 items-stretch rounded-full h-full bg-white shadow-sm">
-                                <div class="text-[#756783] flex items-center justify-center pl-5">
-                                    <x-lucide-search class="text-[#756783] w-4 h-4" />
-                                </div>
                                 <input wire:model.live.debounce.300ms="search"
-                                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-[#141217] focus:outline-0 focus:ring-0 border-none bg-white focus:border-none h-full placeholder:text-[#756783] px-4 text-base font-normal leading-normal"
+                                    class="form-input flex h-full w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full border-none bg-white px-4 text-base font-normal leading-normal text-[#141217] placeholder:text-[#756783] focus:border-none focus:outline-0 focus:ring-0"
                                     placeholder="Cari produk ice cream..." />
                             </div>
                         </label>
                     </div>
 
                     <!-- Tabs Filter Produk -->
-                    <div class="pb-3 overflow-x-scroll me-4 [&::-webkit-scrollbar]:hidden ">
+                    <div class=" overflow-x-scroll me-4 [&::-webkit-scrollbar]:hidden ">
                         <div class="flex border-b border-[#e0dde4] ps-4 gap-4 whitespace-nowrap me-8">
                             @php
                                 $filters = [
@@ -45,7 +45,7 @@
                             @foreach($filters as $key => $label)
                                 <button wire:click="$set('filter', '{{ $key }}')" wire:loading.class="opacity-50"
                                     class="relative flex flex-col items-center justify-center pb-[13px] pt-4 transition
-                                                                                                                                                                                                                                                {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
+                                                                                                                                                                                                                                                                                                                                                                            {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
                                     <p class="text-base text-[12px] leading-normal tracking-[0.015em]">{{ $label }}</p>
                                     @if($filter === $key)
                                         <div class="absolute bottom-0 h-1 w-full gradient-bg rounded-t-full"></div>

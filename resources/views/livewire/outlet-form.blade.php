@@ -4,17 +4,20 @@
         <div class="flex items-center p-4 pb-2 justify-between relative">
             <img src="{{ asset('logo.png') }}" class="h-12 w-auto" alt="">
 
-            <div class="flex w-12 items-center justify-end ">
+            <div class="flex items-center justify-end ">
                 <button wire:click="openModal"
-                    class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 w-12 bg-[#BCA1D4]/30 backdrop-blur-sm text-[#141217] text-base font-bold leading-normal tracking-[0.015em] shadow-sm">
-                    <x-lucide-plus class="w-8 h-8" style="color: var(--brand-purple);" />
+                    class="flex max-w-[480px] bg-[#BCA1D4]/30 py-1 px-2 rounded-full cursor-pointer items-center justify-center overflow-hidden ">
+                    <span class="text-[12px] text-slate-700 me-2">Tambah</span>
+                    <x-lucide-plus
+                        class="w-6 h-6 rounded-full bg-[#BCA1D4]/30 backdrop-blur-sm text-[#141217] text-base font-bold leading-normal tracking-[0.015em] shadow-sm"
+                        style="color: var(--brand-purple);" />
                 </button>
             </div>
         </div>
 
         <!-- Search -->
-        <div class="px-4 py-3">
-            <label class="flex flex-col min-w-40 h-14 w-full">
+        <div class="px-4">
+            <label class="flex flex-col min-w-40 h-10 w-full">
                 <div class="flex w-full flex-1 items-stretch rounded-full h-full bg-white shadow-sm">
                     <div class="text-[#756783] flex items-center justify-center pl-5">
                         <x-lucide-search class="text-[#756783]" />
