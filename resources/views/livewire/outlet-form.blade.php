@@ -53,7 +53,7 @@
                         @if($outlet->link && filter_var($outlet->link, FILTER_VALIDATE_URL))
                             <div class="mt-2">
                                 <a href="{{ $outlet->link }}" target="_blank"
-                                    class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full bg-blue-100 transition">
+                                    class="inline-flex items-center gap-1 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full bg-blue-100 transition">
                                     <x-lucide-map-pin class="w-3 h-3" />
                                     Buka di Maps
                                 </a>

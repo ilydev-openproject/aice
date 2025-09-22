@@ -205,12 +205,6 @@ class VisitList extends Component
             return;
         }
 
-        $hasOrder = collect($this->products)->sum('jumlah_box') > 0;
-        if (!$hasOrder) {
-            $this->addError('products', 'Minimal 1 produk harus diisi jumlahnya.');
-            return;
-        }
-
         $visit = Visit::findOrFail($this->currentVisitId);
 
         // Hitung total harga & total box
@@ -226,7 +220,7 @@ class VisitList extends Component
         // Hapus order lama
         VisitItem::where('visit_id', $visit->id)->delete();
 
-        // Simpan order baru
+        // Simpan order baru — hanya jika jumlah_box > 0
         foreach ($this->products as $item) {
             if ($item['jumlah_box'] > 0) {
                 VisitItem::create([
@@ -239,11 +233,16 @@ class VisitList extends Component
             }
         }
 
-        // Update kunjungan
+        // Update kunjungan — simpan total_harga (bisa 0)
         $visit->update(['total_harga' => $totalHarga]);
 
-        session()->flash('success', 'Order berhasil disimpan!');
-        $this->closeOrderModal();
+        // Beri feedback: jika order kosong, beri pesan khusus
+        $message = $totalBox > 0
+            ? 'Order berhasil disimpan!'
+            : 'Order kosong berhasil disimpan.';
+
+        session()->flash('success', $message);
+        $this->closeOrderModal(); // ← Pastikan ini selalu jalan
     }
 
     public function resetForm()
