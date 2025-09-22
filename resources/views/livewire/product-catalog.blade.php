@@ -45,7 +45,7 @@
                             @foreach($filters as $key => $label)
                                 <button wire:click="$set('filter', '{{ $key }}')" wire:loading.class="opacity-50"
                                     class="relative flex flex-col items-center justify-center pb-[13px] pt-4 transition
-                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
                                     <p class="text-base text-[12px] leading-normal tracking-[0.015em]">{{ $label }}</p>
                                     @if($filter === $key)
                                         <div class="absolute bottom-0 h-1 w-full gradient-bg rounded-t-full"></div>
@@ -84,7 +84,7 @@
                                         @endif
 
                                         <!-- Tombol Edit & Hapus -->
-                                        <div class="absolute top-2 right-2 flex gap-1">
+                                        <div class="absolute z-150 top-2 right-2 flex gap-1">
                                             <button wire:click="editProduct({{ $product->id }})"
                                                 class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-blue-600 hover:bg-blue-50 transition">
                                                 <x-lucide-pencil class="w-4 h-4" />

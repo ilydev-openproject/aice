@@ -402,75 +402,78 @@
                         </div>
 
                         <!-- Daftar Produk -->
-<div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
-    @forelse($products as $index => $product)
-        <div class="mb-2 rounded-lg shadow-sm transition-all duration-300 overflow-hidden
-                    {{ $product['is_available'] == 0 ? 'bg-red-50/50 border border-red-200' : 'bg-white' }}">
+                        <div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
+                            @forelse($products as $index => $product)
+                                <div
+                                    class="{{ $product['is_available'] == 0 ? 'bg-red-50/50 border border-red-200' : 'bg-white' }} mb-2 overflow-hidden rounded-lg shadow-sm transition-all duration-300">
 
-            <!-- Container utama flex row -->
-            <div class="flex items-center gap-3 p-1">
+                                    <!-- Container utama flex row -->
+                                    <div class="flex items-center gap-3 p-1">
 
-                <!-- Gambar Produk -->
-                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 relative overflow-hidden">
-                    @if ($product['is_available'] == 0)
-                        <div class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10">
-                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-full border border-red-200">
-                                Habis
-                            </span>
+                                        <!-- Gambar Produk -->
+                                        <div
+                                            class="relative flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100">
+                                            @if ($product['is_available'] == 0)
+                                                <div
+                                                    class="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-sm">
+                                                    <span
+                                                        class="rounded-full border border-red-200 bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
+                                                        Habis
+                                                    </span>
+                                                </div>
+                                            @endif
+
+                                            @if ($product['foto'])
+                                                <img src="{{ asset('storage/' . $product['foto']) }}"
+                                                    alt="{{ $product['nama_produk'] }}"
+                                                    class="{{ $product['is_available'] == 0 ? 'grayscale opacity-60' : 'hover:scale-105 transition-transform duration-200' }} h-full w-full object-contain"
+                                                    loading="lazy">
+                                            @else
+                                                <x-lucide-image-off class="h-6 w-6 text-gray-400" />
+                                            @endif
+                                        </div>
+
+                                        <!-- Info Produk -->
+                                        <div class="flex-1">
+                                            <p
+                                                class="{{ $product['is_available'] == 0 ? 'line-through text-red-500' : '' }} text-[10px] font-medium">
+                                                {{ $product['nama_produk'] }}
+                                            </p>
+                                            <p class="text-[10px] font-medium text-gray-500">Rp
+                                                {{ number_format($product['harga_jual'], 0, ',', '.') }}</p>
+                                            <p class="text-[10px] font-medium text-gray-500">HPP: Rp
+                                                {{ number_format($product['hpp'], 0, ',', '.') }}/box</p>
+                                        </div>
+
+                                        <!-- Control jumlah -->
+                                        <div class="flex items-center gap-2">
+                                            <button type="button"
+                                                @click="if(products[{{ $index }}].jumlah_box > 0) products[{{ $index }}].jumlah_box--"
+                                                class="{{ $product['is_available'] == 0 ? 'opacity-50 cursor-not-allowed' : '' }} flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+                                                {{ $product['is_available'] == 0 ? 'disabled' : '' }}>
+                                                -
+                                            </button>
+                                            <input type="number" min="0"
+                                                x-model="products[{{ $index }}].jumlah_box"
+                                                class="no-spinner {{ $product['is_available'] == 0 ? 'bg-red-50 text-red-400 border-red-200' : '' }} w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]"
+                                                {{ $product['is_available'] == 0 ? 'readonly' : '' }}>
+                                            <button type="button"
+                                                @click="products[{{ $index }}].jumlah_box++"
+                                                class="{{ $product['is_available'] == 0 ? 'opacity-50 cursor-not-allowed' : '' }} flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+                                                {{ $product['is_available'] == 0 ? 'disabled' : '' }}>
+                                                +
+                                            </button>
+                                        </div>
+
+                                    </div> <!-- end flex row -->
+
+                                </div>
+                            @empty
+                                <div class="py-4 text-center text-gray-500">
+                                    Tidak ada produk ditemukan.
+                                </div>
+                            @endforelse
                         </div>
-                    @endif
-
-                    @if ($product['foto'])
-                        <img src="{{ asset('storage/' . $product['foto']) }}"
-                            alt="{{ $product['nama_produk'] }}"
-                            class="h-full w-full object-contain {{ $product['is_available'] == 0 ? 'grayscale opacity-60' : 'hover:scale-105 transition-transform duration-200' }}"
-                            loading="lazy">
-                    @else
-                        <x-lucide-image-off class="h-6 w-6 text-gray-400" />
-                    @endif
-                </div>
-
-                <!-- Info Produk -->
-                <div class="flex-1">
-                    <p class="text-[10px] font-medium {{ $product['is_available'] == 0 ? 'line-through text-red-500' : '' }}">
-                        {{ $product['nama_produk'] }}
-                    </p>
-                    <p class="text-[10px] font-medium text-gray-500">Rp {{ number_format($product['harga_jual'], 0, ',', '.') }}</p>
-                    <p class="text-[10px] font-medium text-gray-500">HPP: Rp {{ number_format($product['hpp'], 0, ',', '.') }}/box</p>
-                </div>
-
-                <!-- Control jumlah -->
-                <div class="flex items-center gap-2">
-                    <button type="button"
-                        @click="if(products[{{ $index }}].jumlah_box > 0) products[{{ $index }}].jumlah_box--"
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300
-                               {{ $product['is_available'] == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                        {{ $product['is_available'] == 0 ? 'disabled' : '' }}>
-                        -
-                    </button>
-                    <input type="number" min="0"
-                        x-model="products[{{ $index }}].jumlah_box"
-                        class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]
-                               {{ $product['is_available'] == 0 ? 'bg-red-50 text-red-400 border-red-200' : '' }}"
-                        {{ $product['is_available'] == 0 ? 'readonly' : '' }}>
-                    <button type="button"
-                        @click="products[{{ $index }}].jumlah_box++"
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300
-                               {{ $product['is_available'] == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                        {{ $product['is_available'] == 0 ? 'disabled' : '' }}>
-                        +
-                    </button>
-                </div>
-
-            </div> <!-- end flex row -->
-
-        </div>
-    @empty
-        <div class="py-4 text-center text-gray-500">
-            Tidak ada produk ditemukan.
-        </div>
-    @endforelse
-</div>
                     </form>
 
                     <!-- Action Buttons & Summary -->
