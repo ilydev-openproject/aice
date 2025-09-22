@@ -1,34 +1,63 @@
-const CACHE_NAME = "1.0.1";
+const CACHE_NAME = "1.0.2";
 const urlsToCache = [
-    "/",
-    "/home",
-    "/produk",
-    "/outlet",
-    "/visit",
-    "/public/manifest.json",
+    "/", // home
+    "/outlet", // route outlet
+    "/visit", // route visit
+    "/produk", // route produk
+    "/manifest.json", // manifest
     "/build/assets/app.css",
     "/build/assets/app.js",
     "/icons/192.png",
-    // Tambahkan asset lain yang sering dipakai
+    "/offline.html", // fallback offline page
 ];
 
 // Install Service Worker
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
+        (async () => {
+            const cache = await caches.open(CACHE_NAME);
+            await Promise.allSettled(urlsToCache.map((url) => cache.add(url)));
+        })()
     );
+    self.skipWaiting();
 });
 
-// Fetch — pakai cache dulu, kalau gagal baru ke network
+// Activate — bersihkan cache lama
+self.addEventListener("activate", (event) => {
+    event.waitUntil(
+        caches.keys().then((cacheNames) =>
+            Promise.all(
+                cacheNames.map((name) => {
+                    if (name !== CACHE_NAME) {
+                        return caches.delete(name);
+                    }
+                })
+            )
+        )
+    );
+    self.clients.claim();
+});
+
+// Fetch — coba network dulu, kalau gagal fallback ke cache
 self.addEventListener("fetch", (event) => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
-        })
+        fetch(event.request)
+            .then((response) => {
+                const resClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, resClone);
+                });
+                return response;
+            })
+            .catch(() =>
+                caches
+                    .match(event.request)
+                    .then((res) => res || caches.match("/offline.html"))
+            )
     );
 });
 
-// Sync Background — simpan data kunjungan saat offline
+// Background Sync — simpan data kunjungan saat offline
 self.addEventListener("sync", (event) => {
     if (event.tag === "sync-visits") {
         event.waitUntil(syncVisits());
@@ -65,7 +94,12 @@ function openDB() {
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
-            db.createObjectStore("visits", { keyPath: "id" });
+            if (!db.objectStoreNames.contains("visits")) {
+                db.createObjectStore("visits", {
+                    keyPath: "id",
+                    autoIncrement: true,
+                });
+            }
         };
 
         request.onsuccess = () => resolve(request.result);

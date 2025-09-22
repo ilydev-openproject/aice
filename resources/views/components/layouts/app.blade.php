@@ -54,7 +54,6 @@
       <div class="keyboard"></div>
     </div>
   </div> -->
-  <div></div>
   <div class="inner-body bg-[#e7e7e7] max-w-sm mx-auto relative">
     {{ $slot }}
     <x-navigation></x-navigation>
@@ -74,7 +73,7 @@
   <script>
     lucide.createIcons();
   </script>
-  <script>
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', () => {
       const loader = document.getElementById('loader');
       const innerBody = document.querySelector('.inner-body');
@@ -88,7 +87,7 @@
         });
       });
     });
-  </script>
+  </script> -->
 </body>
 
 </html>
