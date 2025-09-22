@@ -45,7 +45,7 @@
                             @foreach($filters as $key => $label)
                                 <button wire:click="$set('filter', '{{ $key }}')" wire:loading.class="opacity-50"
                                     class="relative flex flex-col items-center justify-center pb-[13px] pt-4 transition
-                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
                                     <p class="text-base text-[12px] leading-normal tracking-[0.015em]">{{ $label }}</p>
                                     @if($filter === $key)
                                         <div class="absolute bottom-0 h-1 w-full gradient-bg rounded-t-full"></div>
@@ -289,7 +289,7 @@
                         hover:bg-green-50 hover:border-green-400">
                                         <x-lucide-check
                                             class="w-5 h-5 text-green-600 transition-transform group-hover:scale-110" />
-                                        <span class="font-medium text-green-700">Tersedia</span>
+                                        <span class="font-medium text-[10px] text-green-700">Tersedia</span>
                                     </div>
                                 </label>
 
@@ -301,7 +301,7 @@
                         hover:bg-red-50 hover:border-red-400">
                                         <x-lucide-x
                                             class="w-5 h-5 text-red-600 transition-transform group-hover:scale-110" />
-                                        <span class="font-medium text-red-700">Tidak Tersedia</span>
+                                        <span class="font-medium text-[10px] text-red-700">Tidak Tersedia</span>
                                     </div>
                                 </label>
                             </div>
