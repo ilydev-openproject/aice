@@ -54,7 +54,7 @@
       <div class="keyboard"></div>
     </div>
   </div> -->
-
+  <div></div>
   <div class="inner-body bg-[#e7e7e7] max-w-sm mx-auto relative">
     {{ $slot }}
     <x-navigation></x-navigation>
