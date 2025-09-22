@@ -69,21 +69,6 @@
   <script>
     lucide.createIcons();
   </script>
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loader = document.getElementById('loader');
-      const innerBody = document.querySelector('.inner-body');
-
-      window.addEventListener('load', () => {
-        loader.style.opacity = '0';
-        innerBody.style.opacity = '1';
-
-        loader.addEventListener('transitionend', () => {
-          loader.style.display = 'none';
-        });
-      });
-    });
-  </script> -->
 </body>
 
 </html>
