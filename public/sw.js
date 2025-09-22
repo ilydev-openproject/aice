@@ -10,7 +10,8 @@ const urlsToCache = [
     "/icons/192.png",
     "/offline.html", // fallback offline page
 ];
-
+{
+}
 // Install Service Worker
 self.addEventListener("activate", (event) => {
     const cacheWhitelist = [CACHE_NAME];
