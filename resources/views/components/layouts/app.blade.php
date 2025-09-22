@@ -45,7 +45,7 @@
 </style>
 
 <body>
-  <div class="inner-body bg-[#e7e7e7] max-w-sm mx-auto relative">
+  <div class="inner-body bg-[#e7e7e7] w-screen max-w-sm mx-auto relative">
     {{ $slot }}
     <x-navigation></x-navigation>
 
