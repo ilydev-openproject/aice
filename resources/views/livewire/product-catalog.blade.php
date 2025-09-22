@@ -45,7 +45,7 @@
                             @foreach($filters as $key => $label)
                                 <button wire:click="$set('filter', '{{ $key }}')" wire:loading.class="opacity-50"
                                     class="relative flex flex-col items-center justify-center pb-[13px] pt-4 transition
-                                                                                                                                                                                                                                                                                                                                                                                    {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ $filter === $key ? 'text-[#141217] font-bold' : 'text-[#756783] font-medium' }}">
                                     <p class="text-base text-[12px] leading-normal tracking-[0.015em]">{{ $label }}</p>
                                     @if($filter === $key)
                                         <div class="absolute bottom-0 h-1 w-full gradient-bg rounded-t-full"></div>
@@ -61,12 +61,21 @@
                             <div class="flex flex-col gap-3 group">
                                 <!-- Card Container -->
                                 <div
-                                    class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                                    class="rounded-2xl shadow-sm border overflow-hidden hover:shadow-md transition-all duration-300 {{ !$product->is_available ? 'bg-red-50/50 border-red-200' : 'bg-white border-gray-100' }}">
                                     <!-- Gambar -->
                                     <div class="w-full overflow-hidden bg-gray-100 relative">
+                                        @if(!$product->is_available)
+                                            <div
+                                                class="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-10">
+                                                <span
+                                                    class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full border border-red-200">
+                                                    Tidak Tersedia
+                                                </span>
+                                            </div>
+                                        @endif
                                         @if($product->foto)
                                             <img src="{{ asset('storage/' . $product->foto) }}"
-                                                class="w-auto h-[120px] mx-auto p-4 object-maintain hover:scale-105 transition-transform duration-300"
+                                                class="w-auto h-[120px] mx-auto p-4 object-contain hover:scale-105 transition-transform duration-300 {{ !$product->is_available ? 'grayscale' : '' }}"
                                                 alt="{{ $product->nama_produk }}">
                                         @else
                                             <div class="w-full h-full bg-gray-50 flex items-center justify-center">
@@ -268,14 +277,48 @@
                                 </span>
                             @enderror
                         </div>
+                        <!-- Status Ketersediaan -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-800 mb-3">Status Ketersediaan</label>
+                            <div class="flex gap-4 p-2 bg-gray-50 rounded-xl border border-gray-200">
+                                <!-- Opsi Tersedia -->
+                                <label class="relative flex-1 cursor-pointer group">
+                                    <input type="radio" wire:model="is_available" value="1" class="sr-only peer">
+                                    <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 transition-all duration-200 
+                        peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:shadow-md 
+                        hover:bg-green-50 hover:border-green-400">
+                                        <x-lucide-check
+                                            class="w-5 h-5 text-green-600 transition-transform group-hover:scale-110" />
+                                        <span class="font-medium text-green-700">Tersedia</span>
+                                    </div>
+                                </label>
 
+                                <!-- Opsi Tidak Tersedia -->
+                                <label class="relative flex-1 cursor-pointer group">
+                                    <input type="radio" wire:model="is_available" value="0" class="sr-only peer">
+                                    <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 transition-all duration-200 
+                        peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:shadow-md 
+                        hover:bg-red-50 hover:border-red-400">
+                                        <x-lucide-x
+                                            class="w-5 h-5 text-red-600 transition-transform group-hover:scale-110" />
+                                        <span class="font-medium text-red-700">Tidak Tersedia</span>
+                                    </div>
+                                </label>
+                            </div>
+                            @error('is_available')
+                                <div class="mt-2 flex items-center gap-1 text-red-500 text-sm animate-pulse">
+                                    <x-lucide-alert-triangle class="w-4 h-4" />
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         <!-- Spacer untuk tombol tidak tertutup oleh keyboard di mobile -->
                         <div class="h-8"></div>
                     </form>
 
                     <!-- Action Buttons (Sticky Bottom) -->
                     <div
-                        class="sticky w-full max-w-md pb-12 bottom-0 bg-white border-t border-gray-100 px-6 py-4 backdrop-blur-sm">
+                        class="fixed w-full max-w-md bottom-0 bg-white border-t border-gray-100 px-6 py-2 backdrop-blur-sm">
                         <div class="flex gap-3">
                             <button type="button" wire:click="closeModal"
                                 class="flex-1 py-3 px-4 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 font-medium transition">

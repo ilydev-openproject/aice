@@ -106,6 +106,7 @@ class VisitList extends Component
                 'hpp' => $product->hpp,
                 'harga_jual' => $product->het,
                 'foto' => $product->foto,
+                'is_available' => $product->is_available,
                 'jumlah_box' => 0,
                 'total_harga' => 0,
             ];

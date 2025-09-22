@@ -13,5 +13,6 @@ class Product extends Model
         'isi_per_box',
         'foto',
         'margin',
+        'is_available',
     ];
 }

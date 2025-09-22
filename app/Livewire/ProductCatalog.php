@@ -13,6 +13,7 @@ class ProductCatalog extends Component
     public $search = '';
     public $showModal = false;
     public $filter = '';
+    public $is_available = true;
     // State form
     public $nama_produk, $hpp, $harga_jual_per_item, $isi_per_box, $margin;
     public $foto; // handle upload file
@@ -70,6 +71,7 @@ class ProductCatalog extends Component
         $this->margin = '';
         $this->foto = null;
         $this->fotoPath = null;
+        $this->is_available = true; // <-- default true
         $this->editingProductId = null;
     }
 
@@ -81,12 +83,9 @@ class ProductCatalog extends Component
             'hpp' => 'required|numeric|min:0',
             'harga_jual_per_item' => 'required|numeric|min:0',
             'isi_per_box' => 'required|integer|min:1',
+            'foto' => 'nullable|image|max:1024',
+            'is_available' => 'required|boolean', // <-- tambahkan ini
         ];
-
-        // Foto wajib hanya saat tambah produk
-        if (!$this->editingProductId) {
-            $rules['foto'] = 'required|image|max:1024';
-        }
 
         $this->validate($rules);
 
@@ -99,7 +98,6 @@ class ProductCatalog extends Component
         }
 
         if ($this->editingProductId) {
-            // UPDATE
             $product = Product::findOrFail($this->editingProductId);
             $oldPath = $product->foto;
 
@@ -110,16 +108,15 @@ class ProductCatalog extends Component
                 'isi_per_box' => $this->isi_per_box,
                 'margin' => $this->margin,
                 'foto' => $path ?: $oldPath,
+                'is_available' => $this->is_available, // <-- simpan
             ]);
 
-            // Hapus foto lama jika upload foto baru
             if ($path && $oldPath && $oldPath !== $path) {
                 \Storage::disk('public')->delete($oldPath);
             }
 
             session()->flash('success', 'Produk berhasil diupdate!');
         } else {
-            // CREATE
             Product::create([
                 'nama_produk' => $this->nama_produk,
                 'hpp' => $this->hpp,
@@ -127,6 +124,7 @@ class ProductCatalog extends Component
                 'isi_per_box' => $this->isi_per_box,
                 'margin' => $this->margin,
                 'foto' => $path,
+                'is_available' => $this->is_available, // <-- simpan
             ]);
 
             session()->flash('success', 'Produk berhasil ditambahkan!');
@@ -156,6 +154,7 @@ class ProductCatalog extends Component
         $this->isi_per_box = $product->isi_per_box;
         $this->foto = null;
         $this->fotoPath = $product->foto;
+        $this->is_available = $product->is_available; // <-- tambahkan ini
 
         $this->showModal = true;
     }
