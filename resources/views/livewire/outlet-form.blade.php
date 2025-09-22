@@ -50,6 +50,15 @@
                         @if($outlet->alamat)
                             <p class="text-xs text-gray-500 mt-1">{{ $outlet->alamat }}</p>
                         @endif
+                        @if($outlet->link && filter_var($outlet->link, FILTER_VALIDATE_URL))
+                            <div class="mt-2">
+                                <a href="{{ $outlet->link }}" target="_blank"
+                                    class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full bg-blue-100 transition">
+                                    <x-lucide-map-pin class="w-3 h-3" />
+                                    Buka di Maps
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Tombol Edit & Hapus -->
@@ -147,9 +156,9 @@
                     <!-- Link Google Maps -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Link Google Maps *</label>
-                        <input type="url" wire:model="link"
+                        <input type="text" wire:model="link"
                             class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            placeholder="https://goo.gl/maps/...">
+                            placeholder="Copas link Google Maps langsung di sini...">
                         @error('link') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         <p class="text-xs text-gray-500 mt-1">Contoh: https://goo.gl/maps/ABC123</p>
                     </div>

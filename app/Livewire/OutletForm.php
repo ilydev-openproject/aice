@@ -51,46 +51,53 @@ class OutletForm extends Component
         $this->resetValidation();
     }
 
-    // Simpan toko
+    // Simpan toko — DIPERBAIKI AGAR WORK SAAT EDIT
     public function saveOutlet()
     {
-        $rules = [
+        // Hapus validasi strict — biar copas langsung bisa
+        $this->validate([
             'nama_toko' => 'required|string|max:255',
             'kode_toko' => 'nullable|string|max:50|unique:outlets,kode_toko,' . $this->editingOutletId,
-            'jam_buka' => 'nullable|date_format:H:i',
-            'jam_tutup' => 'nullable|date_format:H:i',
-            'nomor_wa' => 'nullable|regex:/^62[8][0-9]{9,14}$/',
-            'link' => 'required|string|max:255',
-        ];
+            'jam_buka' => 'nullable',
+            'jam_tutup' => 'nullable',
+            'nomor_wa' => 'nullable',
+            'link' => 'nullable|string|max:1000', // biarin apa aja, panjangin max
+            'alamat' => 'nullable',
+        ]);
 
-        $this->validate($rules);
+        try {
+            if ($this->editingOutletId) {
+                $outlet = Outlet::findOrFail($this->editingOutletId);
+                $outlet->update([
+                    'nama_toko' => $this->nama_toko,
+                    'kode_toko' => $this->kode_toko,
+                    'jam_buka' => $this->jam_buka,
+                    'jam_tutup' => $this->jam_tutup,
+                    'nomor_wa' => trim($this->nomor_wa),
+                    'alamat' => $this->alamat,
+                    'link' => trim($this->link), // bersihkan spasi
+                ]);
+                session()->flash('success', 'Toko berhasil diupdate!');
+            } else {
+                Outlet::create([
+                    'nama_toko' => $this->nama_toko,
+                    'kode_toko' => $this->kode_toko,
+                    'jam_buka' => $this->jam_buka,
+                    'jam_tutup' => $this->jam_tutup,
+                    'nomor_wa' => trim($this->nomor_wa),
+                    'alamat' => $this->alamat,
+                    'link' => trim($this->link),
+                ]);
+                session()->flash('success', 'Toko berhasil ditambahkan!');
+            }
 
-        if ($this->editingOutletId) {
-            $outlet = Outlet::findOrFail($this->editingOutletId);
-            $outlet->update([
-                'nama_toko' => $this->nama_toko,
-                'kode_toko' => $this->kode_toko,
-                'jam_buka' => $this->jam_buka,
-                'jam_tutup' => $this->jam_tutup,
-                'nomor_wa' => $this->nomor_wa,
-                'alamat' => $this->alamat,
-                'link' => $this->link,
-            ]);
-            session()->flash('success', 'Toko berhasil diupdate!');
-        } else {
-            Outlet::create([
-                'nama_toko' => $this->nama_toko,
-                'kode_toko' => $this->kode_toko,
-                'jam_buka' => $this->jam_buka,
-                'jam_tutup' => $this->jam_tutup,
-                'nomor_wa' => $this->nomor_wa,
-                'link' => $this->link,
-                'alamat' => $this->alamat,
-            ]);
-            session()->flash('success', 'Toko berhasil ditambahkan!');
+            // Pastikan modal TUTUP setelah simpan — ini kunci!
+            $this->closeModal();
+
+        } catch (\Exception $e) {
+            // Jika masih error, munculkan notifikasi
+            session()->flash('error', 'Gagal menyimpan: ' . $e->getMessage());
         }
-
-        $this->closeModal();
     }
 
     // Edit toko
