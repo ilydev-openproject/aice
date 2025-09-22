@@ -29,21 +29,32 @@
     as="style" onload="this.onload=null;this.rel='stylesheet'">
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <style>
-    :root {
-      --brand-purple: #7A32D5;
-      --brand-pink: #E500AB;
-      --brand-red: #FF3C7B;
-      --brand-yellow: #FFC24B;
-    }
 
-    .gradient-bg {
-      background-image: linear-gradient(to right, var(--brand-pink), var(--brand-red), var(--brand-yellow));
-    }
-  </style>
 </head>
+<style>
+  :root {
+    --brand-purple: #7A32D5;
+    --brand-pink: #E500AB;
+    --brand-red: #FF3C7B;
+    --brand-yellow: #FFC24B;
+  }
+
+  .gradient-bg {
+    background-image: linear-gradient(to right, var(--brand-pink), var(--brand-red), var(--brand-yellow));
+  }
+</style>
 
 <body>
+  <!-- From Uiverse.io by Nawsome -->
+  <!-- <div id="loader"
+    class="absolute w-full h-screen mx-auto flex flex-col items-center justify-center z-50 bg-white transition-opacity duration-500 ease-out">
+    <div class="typewriter">
+      <div class="slide"><i></i></div>
+      <div class="paper"></div>
+      <div class="keyboard"></div>
+    </div>
+  </div> -->
+
   <div class="inner-body bg-[#e7e7e7] max-w-sm mx-auto relative">
     {{ $slot }}
     <x-navigation></x-navigation>
@@ -62,6 +73,21 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     lucide.createIcons();
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loader = document.getElementById('loader');
+      const innerBody = document.querySelector('.inner-body');
+
+      window.addEventListener('load', () => {
+        loader.style.opacity = '0';
+        innerBody.style.opacity = '1';
+
+        loader.addEventListener('transitionend', () => {
+          loader.style.display = 'none';
+        });
+      });
+    });
   </script>
 </body>
 

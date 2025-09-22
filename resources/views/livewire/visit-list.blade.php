@@ -396,7 +396,7 @@
                     <div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
                         @forelse($products as $index => $product)
                             <div
-                                class="{{ $product['jumlah_box'] > 0 ? 'bg-purple-300/60 border border-purple-200' : 'bg-white' }} mb-2 flex items-center gap-3 rounded-lg p-1 shadow-sm transition-all duration-200">
+                                class="{{ $product['jumlah_box'] > 0 ? 'bg-purple-300/60 ' : 'bg-white' }} mb-2 flex items-center gap-3 rounded-lg p-1 shadow-sm transition-all duration-200">
                                 <div
                                     class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
                                     @if ($product['foto'])
