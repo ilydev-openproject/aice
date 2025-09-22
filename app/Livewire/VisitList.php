@@ -103,8 +103,8 @@ class VisitList extends Component
             return [
                 'id' => $product->id,
                 'nama_produk' => $product->nama_produk,
-                'hpp' => $product->hpp,
-                'harga_jual' => $product->het,
+                'hpp' => (int) $product->hpp,
+                'harga_jual' => (int) $product->het,
                 'foto' => $product->foto,
                 'is_available' => $product->is_available,
                 'jumlah_box' => 0,

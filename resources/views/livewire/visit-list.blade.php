@@ -389,7 +389,11 @@
                         return this.products.reduce((sum, p) => sum + Number(p.jumlah_box || 0), 0)
                     },
                     get totalHarga() {
-                        return this.products.reduce((sum, p) => sum + (Number(p.jumlah_box || 0) * Number(p.harga_jual)), 0)
+                        return this.products.reduce((sum, p) => {
+                            const qty = Number(p.jumlah_box || 0);
+                            const price = Number(p.hpp?.toString().replace(/\./g, '') || 0); // Hapus titik ribuan
+                            return sum + (qty * price);
+                        }, 0);
                     }
                 }">
                     <!-- Form -->
@@ -404,12 +408,14 @@
                         <!-- Daftar Produk -->
                         <div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
                             @forelse($products as $index => $product)
-                                <div
-                                    class="{{ $product['is_available'] == 0 ? 'bg-red-50/50 border border-red-200' : 'bg-white' }} mb-2 overflow-hidden rounded-lg shadow-sm transition-all duration-300">
+                                <div x-data
+                                    :class="products[{{ $index }}].jumlah_box > 0 ?
+                                        'bg-green-500/60 border border-green-200' :
+                                        '{{ $product['is_available'] == 0 ? 'bg-red-50/50 border border-red-200' : 'bg-white' }}'"
+                                    class="mb-2 overflow-hidden rounded-lg shadow-sm transition-all duration-300">
 
                                     <!-- Container utama flex row -->
                                     <div class="flex items-center gap-3 p-1">
-
                                         <!-- Gambar Produk -->
                                         <div
                                             class="relative flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100">
@@ -439,10 +445,12 @@
                                                 class="{{ $product['is_available'] == 0 ? 'line-through text-red-500' : '' }} text-[10px] font-medium">
                                                 {{ $product['nama_produk'] }}
                                             </p>
-                                            <p class="text-[10px] font-medium text-gray-500">Rp
-                                                {{ number_format($product['harga_jual'], 0, ',', '.') }}</p>
-                                            <p class="text-[10px] font-medium text-gray-500">HPP: Rp
-                                                {{ number_format($product['hpp'], 0, ',', '.') }}/box</p>
+                                            <p class="text-[10px] font-medium text-gray-500">
+                                                Rp {{ number_format($product['harga_jual'], 0, ',', '.') }}
+                                            </p>
+                                            <p class="text-[10px] font-medium text-gray-500">
+                                                HPP: Rp {{ number_format($product['hpp'], 0, ',', '.') }}/box
+                                            </p>
                                         </div>
 
                                         <!-- Control jumlah -->
@@ -464,9 +472,7 @@
                                                 +
                                             </button>
                                         </div>
-
-                                    </div> <!-- end flex row -->
-
+                                    </div>
                                 </div>
                             @empty
                                 <div class="py-4 text-center text-gray-500">
@@ -474,6 +480,7 @@
                                 </div>
                             @endforelse
                         </div>
+
                     </form>
 
                     <!-- Action Buttons & Summary -->
@@ -507,7 +514,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
