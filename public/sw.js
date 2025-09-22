@@ -1,6 +1,6 @@
-const CACHE_NAME = "1.0.2";
+const CACHE_NAME = "1.0.3";
 const urlsToCache = [
-    "/", // home
+    "/",
     "/outlet", // route outlet
     "/visit", // route visit
     "/produk", // route produk
