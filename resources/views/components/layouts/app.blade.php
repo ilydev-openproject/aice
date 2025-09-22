@@ -45,26 +45,22 @@
 </style>
 
 <body>
-  <!-- From Uiverse.io by Nawsome -->
-  <!-- <div id="loader"
-    class="absolute w-full h-screen mx-auto flex flex-col items-center justify-center z-50 bg-white transition-opacity duration-500 ease-out">
-    <div class="typewriter">
-      <div class="slide"><i></i></div>
-      <div class="paper"></div>
-      <div class="keyboard"></div>
-    </div>
-  </div> -->
   <div class="inner-body bg-[#e7e7e7] max-w-sm mx-auto relative">
     {{ $slot }}
     <x-navigation></x-navigation>
 
   </div>
   <script>
+    // Cek apakah browser mendukung Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-          .then(registration => console.log('SW registered!'))
-          .catch(error => console.log('SW registration failed:', error));
+          .then((registration) => {
+            console.log('Service Worker terdaftar dengan scope:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('Pendaftaran Service Worker gagal:', error);
+          });
       });
     }
   </script>

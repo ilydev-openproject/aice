@@ -12,97 +12,52 @@ const urlsToCache = [
 ];
 
 // Install Service Worker
-self.addEventListener("install", (event) => {
-    event.waitUntil(
-        (async () => {
-            const cache = await caches.open(CACHE_NAME);
-            await Promise.allSettled(urlsToCache.map((url) => cache.add(url)));
-        })()
-    );
-    self.skipWaiting();
-});
-
-// Activate — bersihkan cache lama
 self.addEventListener("activate", (event) => {
+    const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
-        caches.keys().then((cacheNames) =>
-            Promise.all(
-                cacheNames.map((name) => {
-                    if (name !== CACHE_NAME) {
-                        return caches.delete(name);
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        return caches.delete(cacheName);
                     }
                 })
-            )
-        )
+            );
+        })
     );
-    self.clients.claim();
 });
 
-// Fetch — coba network dulu, kalau gagal fallback ke cache
+// Fetch event - Intersep permintaan jaringan
 self.addEventListener("fetch", (event) => {
     event.respondWith(
-        fetch(event.request)
-            .then((response) => {
-                const resClone = response.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, resClone);
-                });
+        // Coba ambil dari cache dulu
+        caches.match(event.request).then((response) => {
+            // Jika ditemukan di cache, kembalikan
+            if (response) {
                 return response;
-            })
-            .catch(() =>
-                caches
-                    .match(event.request)
-                    .then((res) => res || caches.match("/offline.html"))
-            )
+            }
+            // Jika tidak ada di cache, ambil dari jaringan
+            return fetch(event.request).then((response) => {
+                // Periksa apakah kita mendapat respons yang valid
+                if (
+                    !response ||
+                    response.status !== 200 ||
+                    response.type !== "basic"
+                ) {
+                    return response;
+                }
+
+                var responseToCache = response.clone();
+
+                caches.open(CACHE_NAME).then((cache) => {
+                    // Hanya cache permintaan GET
+                    if (event.request.method === "GET") {
+                        cache.put(event.request, responseToCache);
+                    }
+                });
+
+                return response;
+            });
+        })
     );
 });
-
-// Background Sync — simpan data kunjungan saat offline
-self.addEventListener("sync", (event) => {
-    if (event.tag === "sync-visits") {
-        event.waitUntil(syncVisits());
-    }
-});
-
-async function syncVisits() {
-    const db = await openDB();
-    const tx = db.transaction("visits", "readwrite");
-    const store = tx.objectStore("visits");
-    const visits = await store.getAll();
-
-    for (const visit of visits) {
-        try {
-            const response = await fetch("/api/visits", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(visit),
-            });
-
-            if (response.ok) {
-                await store.delete(visit.id);
-            }
-        } catch (error) {
-            console.log("Sync failed, will retry later");
-        }
-    }
-}
-
-// IndexedDB — simpan data offline
-function openDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open("SalesTrackerDB", 1);
-
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains("visits")) {
-                db.createObjectStore("visits", {
-                    keyPath: "id",
-                    autoIncrement: true,
-                });
-            }
-        };
-
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
-}
