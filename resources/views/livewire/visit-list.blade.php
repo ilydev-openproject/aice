@@ -382,108 +382,107 @@
                         {{ session('success') }}
                     </div>
                 @endif
+                <!-- Parent Wrapper -->
+                <div x-data="{
+                    products: @entangle('products'),
+                    get totalBox() {
+                        return this.products.reduce((sum, p) => sum + Number(p.jumlah_box || 0), 0)
+                    },
+                    get totalHarga() {
+                        return this.products.reduce((sum, p) => sum + (Number(p.jumlah_box || 0) * Number(p.harga_jual)), 0)
+                    }
+                }">
+                    <!-- Form -->
+                    <form wire:submit.prevent="saveOrder" class="space-y-2 px-3" id="order-form">
+                        <!-- Cari Produk -->
+                        <div>
+                            <input type="text" wire:model.live="searchProduct"
+                                class="w-full rounded-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                                placeholder="Ketik nama produk...">
+                        </div>
 
-                <!-- Form -->
-                <!-- Form -->
-<form wire:submit.prevent="saveOrder" class="space-y-2 px-3" id="order-form"
-    x-data="{
-        products: @entangle('products'),
-        get totalBox() {
-            return this.products.reduce((sum, p) => sum + Number(p.jumlah_box || 0), 0)
-        },
-        get totalHarga() {
-            return this.products.reduce((sum, p) => sum + (Number(p.jumlah_box || 0) * Number(p.harga_jual)), 0)
-        }
-    }">
+                        <!-- Daftar Produk -->
+                        <div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
+                            @forelse($products as $index => $product)
+                                <div class="mb-2 flex items-center gap-3 rounded-lg p-1 shadow-sm transition-all duration-200"
+                                    :class="products[{{ $index }}].jumlah_box > 0 ? 'bg-purple-300/60' : 'bg-white'">
 
-    <!-- Cari Produk -->
-    <div>
-        <input type="text" wire:model.live="searchProduct"
-            class="w-full rounded-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-purple-500"
-            placeholder="Ketik nama produk...">
-    </div>
+                                    <div
+                                        class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                                        @if ($product['foto'])
+                                            <img src="{{ asset('storage/' . $product['foto']) }}"
+                                                alt="{{ $product['nama_produk'] }}"
+                                                class="h-full w-full rounded-lg object-contain" loading="lazy">
+                                        @else
+                                            <x-lucide-image-off class="h-6 w-6 text-gray-400" />
+                                        @endif
+                                    </div>
 
-    <!-- Daftar Produk -->
-    <div class="h-[calc(100vh-140px)] w-full overflow-y-auto rounded-xl pb-16">
-        @forelse($products as $index => $product)
-            <div 
-                class="mb-2 flex items-center gap-3 rounded-lg p-1 shadow-sm transition-all duration-200"
-                :class="products[{{ $index }}].jumlah_box > 0 ? 'bg-purple-300/60' : 'bg-white'">
+                                    <div class="flex-1">
+                                        <p class="text-[10px] font-medium">{{ $product['nama_produk'] }}</p>
+                                        <p class="text-[10px] font-medium text-gray-500">Rp
+                                            {{ number_format($product['harga_jual'], 0, ',', '.') }}
+                                        </p>
+                                        <p class="text-[10px] font-medium text-gray-500">HPP: Rp
+                                            {{ number_format($product['hpp'], 0, ',', '.') }}/box
+                                        </p>
+                                    </div>
 
-                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                    @if ($product['foto'])
-                        <img src="{{ asset('storage/' . $product['foto']) }}"
-                            alt="{{ $product['nama_produk'] }}"
-                            class="h-full w-full rounded-lg object-contain" loading="lazy">
-                    @else
-                        <x-lucide-image-off class="h-6 w-6 text-gray-400" />
-                    @endif
+                                    <!-- Control jumlah -->
+                                    <div class="flex items-center gap-2">
+                                        <button type="button"
+                                            @click="if(products[{{ $index }}].jumlah_box > 0) products[{{ $index }}].jumlah_box--"
+                                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
+                                            -
+                                        </button>
+                                        <input type="number" min="0"
+                                            x-model="products[{{ $index }}].jumlah_box"
+                                            class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]">
+                                        <button type="button" @click="products[{{ $index }}].jumlah_box++"
+                                            class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="py-4 text-center text-gray-500">
+                                    Tidak ada produk ditemukan.
+                                </div>
+                            @endforelse
+                        </div>
+                    </form>
+
+                    <!-- Action Buttons & Summary -->
+                    <div
+                        class="fixed bottom-3 w-full max-w-md border-t border-gray-100 bg-white px-6 backdrop-blur-sm">
+                        <!-- Total Harga & Jumlah Box -->
+                        <div class="rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2">
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[12px] font-bold">Total Box:</span>
+                                    <span class="text-[12px] font-bold text-blue-600"
+                                        x-text="totalBox + ' Box'"></span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[12px] font-bold">Total Harga:</span>
+                                    <span class="text-[12px] font-bold text-green-600"
+                                        x-text="'Rp ' + totalHarga.toLocaleString('id-ID')"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" wire:click="closeOrderModal"
+                                class="flex-1 rounded-full border border-gray-300 px-4 py-3 font-medium text-gray-700 transition hover:bg-gray-50">
+                                Batal
+                            </button>
+                            <button type="submit" form="order-form" wire:loading.attr="disabled"
+                                class="flex-1 transform rounded-full bg-gradient-to-r from-[var(--brand-pink)] to-[var(--brand-yellow)] px-4 py-3 font-bold text-white shadow transition hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
+                                <span wire:loading.remove>Simpan Order</span>
+                                <span wire:loading>Menyimpan...</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="flex-1">
-                    <p class="text-[10px] font-medium">{{ $product['nama_produk'] }}</p>
-                    <p class="text-[10px] font-medium text-gray-500">Rp
-                        {{ number_format($product['harga_jual'], 0, ',', '.') }}
-                    </p>
-                    <p class="text-[10px] font-medium text-gray-500">HPP: Rp
-                        {{ number_format($product['hpp'], 0, ',', '.') }}/box
-                    </p>
-                </div>
-
-                <!-- Control jumlah -->
-                <div class="flex items-center gap-2">
-                    <button type="button"
-                        @click="if(products[{{ $index }}].jumlah_box > 0) products[{{ $index }}].jumlah_box--"
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
-                        -
-                    </button>
-                    <input type="number" min="0"
-                        x-model="products[{{ $index }}].jumlah_box"
-                        class="no-spinner w-8 rounded border border-gray-300 px-2 py-1 text-center text-[10px]">
-                    <button type="button"
-                        @click="products[{{ $index }}].jumlah_box++"
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
-                        +
-                    </button>
-                </div>
-            </div>
-        @empty
-            <div class="py-4 text-center text-gray-500">
-                Tidak ada produk ditemukan.
-            </div>
-        @endforelse
-    </div>
-</form>
-
-<!-- Action Buttons & Summary -->
-<div class="fixed bottom-3 w-full max-w-md border-t border-gray-100 bg-white px-6 backdrop-blur-sm"
-    x-data>
-    <!-- Total Harga & Jumlah Box -->
-    <div class="rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2">
-        <div class="flex flex-col gap-1">
-            <div class="flex items-center justify-between">
-                <span class="text-[12px] font-bold">Total Box:</span>
-                <span class="text-[12px] font-bold text-blue-600" x-text="totalBox + ' Box'"></span>
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-[12px] font-bold">Total Harga:</span>
-                <span class="text-[12px] font-bold text-green-600"
-                      x-text="'Rp ' + totalHarga.toLocaleString('id-ID')"></span>
-            </div>
-        </div>
-    </div>
-    <div class="flex gap-3">
-        <button type="button" wire:click="closeOrderModal"
-            class="flex-1 rounded-full border border-gray-300 px-4 py-3 font-medium text-gray-700 transition hover:bg-gray-50">
-            Batal
-        </button>
-        <button type="submit" form="order-form" wire:loading.attr="disabled"
-            class="flex-1 transform rounded-full bg-gradient-to-r from-[var(--brand-pink)] to-[var(--brand-yellow)] px-4 py-3 font-bold text-white shadow transition hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
-            <span wire:loading.remove>Simpan Order</span>
-            <span wire:loading>Menyimpan...</span>
-        </button>
-    </div>
-</div>
 
             </div>
         </div>
