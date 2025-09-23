@@ -7,26 +7,26 @@ use App\Models\Visit;
 use App\Models\VisitItem;
 use App\Models\Product;
 
-class visitOrderModal extends Component
+class SimpleOrderModal extends Component
 {
-    // State untuk mengontrol tampilan modal
+    // Properti untuk mengontrol tampilan modal
     public bool $show = false;
 
-    // State untuk menyimpan ID kunjungan
+    // Properti untuk menyimpan ID kunjungan yang sedang diedit
     public int $visitId = 0;
 
-    // State untuk pencarian produk
+    // Properti untuk pencarian
     public string $search = '';
 
-    // State utama: Daftar produk beserta jumlah ordernya
+    // Properti utama: Daftar produk dengan jumlah box-nya
     // Format: [ ['id' => 1, 'name' => 'Produk A', 'price' => 10000, 'stock' => true, 'qty' => 0], ... ]
     public array $items = [];
 
-    // Listener untuk membuka modal dari komponen parent
-    protected $listeners = ['openFullOrderModal' => 'loadData'];
+    // Listener untuk membuka modal
+    protected $listeners = ['openSimpleOrderModal' => 'loadData'];
 
     /**
-     * Method untuk membuka modal dan memuat data awal
+     * Method utama untuk memuat data awal
      */
     public function loadData(int $visitId): void
     {
@@ -38,7 +38,7 @@ class visitOrderModal extends Component
     }
 
     /**
-     * Memuat daftar produk dari database berdasarkan pencarian
+     * Memuat daftar produk dari database
      */
     public function loadItems(): void
     {
@@ -50,7 +50,7 @@ class visitOrderModal extends Component
 
         $products = $query->limit(50)->get();
 
-        // Reset dan isi ulang array items
+        // Reset array items
         $this->items = [];
 
         foreach ($products as $product) {
@@ -59,13 +59,13 @@ class visitOrderModal extends Component
                 'name' => (string) $product->nama_produk,
                 'price' => (int) $product->price,
                 'stock' => (bool) $product->is_available,
-                'qty' => 0, // Akan diisi oleh loadExistingOrder
+                'qty' => 0, // Default 0, akan diisi di loadExistingOrder
             ];
         }
     }
 
     /**
-     * Memuat order yang sudah ada dari database
+     * Memuat order yang sudah ada (jika ada)
      */
     public function loadExistingOrder(): void
     {
@@ -80,18 +80,15 @@ class visitOrderModal extends Component
 
     /**
      * Event handler saat input pencarian berubah
-     * Livewire akan otomatis memanggil method ini saat $search berubah
      */
     public function updatedSearch(): void
     {
         $this->loadItems();
-        // Kita tidak memanggil loadExistingOrder() di sini agar qty reset saat search
-        // Jika ingin qty tetap, uncomment baris di bawah:
-        // $this->loadExistingOrder();
+        $this->loadExistingOrder(); // Opsional: bisa dihapus jika ingin reset qty saat search
     }
 
     /**
-     * Method untuk menambah jumlah box produk
+     * Menambah jumlah box
      */
     public function increment(int $index): void
     {
@@ -101,7 +98,7 @@ class visitOrderModal extends Component
     }
 
     /**
-     * Method untuk mengurangi jumlah box produk
+     * Mengurangi jumlah box
      */
     public function decrement(int $index): void
     {
@@ -111,7 +108,7 @@ class visitOrderModal extends Component
     }
 
     /**
-     * Method untuk menyimpan order ke database
+     * Menyimpan order ke database
      */
     public function save(): void
     {
@@ -130,7 +127,7 @@ class visitOrderModal extends Component
                     'visit_id' => $visit->id,
                     'product_id' => $item['id'],
                     'jumlah_box' => $item['qty'],
-                    'harga_per_box' => $item['price'],
+                    'harga_per_box' => $item['price'], // Asumsikan HPP = Harga Jual untuk sementara
                     'total_harga' => $item['qty'] * $item['price'],
                 ]);
 
@@ -152,31 +149,15 @@ class visitOrderModal extends Component
     }
 
     /**
-     * Method untuk menutup modal tanpa menyimpan
+     * Menutup modal tanpa menyimpan
      */
     public function cancel(): void
     {
         $this->show = false;
     }
 
-    /**
-     * Helper method untuk menghitung total box
-     */
-    public function getTotalBoxProperty(): int
-    {
-        return collect($this->items)->sum('qty');
-    }
-
-    /**
-     * Helper method untuk menghitung total harga
-     */
-    public function getTotalPriceProperty(): int
-    {
-        return collect($this->items)->sum(fn($item) => $item['qty'] * $item['price']);
-    }
-
     public function render()
     {
-        return view('livewire.visit-order-modal');
+        return view('livewire.simple-order-modal');
     }
 }

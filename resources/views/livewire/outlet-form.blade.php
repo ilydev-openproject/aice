@@ -30,7 +30,7 @@
         </div>
 
         <!-- Daftar Toko -->
-        <div class="p-4 space-y-4 pb-24">
+        <div class="p-4 space-y-4 pb-32">
             @forelse($outlets as $outlet)
                 <div class="relative p-4 bg-white rounded-lg shadow-sm group">
                     <div>
