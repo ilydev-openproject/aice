@@ -63,7 +63,7 @@
         </div>
 
         <!-- Daftar Kunjungan -->
-        <div class="space-y-2 px-4">
+        <div class="space-y-2 px-4 pb-32">
             @if ($visits->isEmpty())
                 <div class="rounded-xl bg-gray-50 py-12 text-center">
                     <x-lucide-package class="mx-auto mb-3 h-12 w-12 text-gray-300" />
