@@ -210,6 +210,7 @@
 
                 <!-- Form -->
                 <form wire:submit.prevent="saveVisit" class="mt-6 space-y-6 px-6" id="visit-form">
+                    @csrf
                     <div class="grid grid-cols-1 gap-4">
                         <label class="flex flex-col gap-2">
                             <span class="mb-2 block text-sm font-medium text-gray-700">Pilih Toko *</span>
@@ -398,6 +399,7 @@
                 }">
                     <!-- Form -->
                     <form wire:submit.prevent="saveOrder" class="space-y-2 px-3" id="order-form">
+                        @csrf
                         <!-- Cari Produk -->
                         <div>
                             <input type="text" wire:model.live="searchProduct"
